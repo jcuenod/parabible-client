@@ -3,7 +3,9 @@ import React from 'react'
 import { registerIcons, loadTheme } from '@uifabric/styling'
 import {
 	ChevronLeft as ChevronLeftIcon,
+	ChevronsLeft as ChevronsLeftIcon,
 	ChevronRight as ChevronRightIcon,
+	ChevronsRight as ChevronsRightIcon,
 	ChevronDown as ChevronDownIcon,
 
 	X as CloseIcon,
@@ -38,8 +40,10 @@ import {
 registerIcons({
 	icons: {
 		ChevronLeftSmall: <ChevronLeftIcon width="16" height="100%" />,
+		ChevronsLeft: <ChevronsLeftIcon width="16" height="100%" />,
 		ChevronLeft: <ChevronLeftIcon width="16" height="100%" />,
 		ChevronRightSmall: <ChevronRightIcon width="16" height="100%" />,
+		ChevronsRight: <ChevronsRightIcon width="16" height="100%" />,
 		ChevronRight: <ChevronRightIcon width="16" height="100%" />,
 		ChevronDown: <ChevronDownIcon width="16" height="100%" />,
 
