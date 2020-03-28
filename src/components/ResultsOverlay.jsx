@@ -100,6 +100,7 @@ class ResultsOverlay extends React.Component {
 		const useAbbreviation = this.state.screenSizeIndex < 4 && !multiline ? true : false
 		const resultCount = searchResults && Object.keys(searchResults).length > 0 ?
 			(searchResults.truncated ? searchResults.truncated : searchResults.results.length) : "?"
+		const numberOfResults = searchResults && Object.keys(searchResults).length ? searchResults.length : 0
 		const pageResults = DataFlow.get("searchResults").results
 							.slice(this.state.page * RESULTS_PER_PAGE,
 								   this.state.page * RESULTS_PER_PAGE + RESULTS_PER_PAGE)
