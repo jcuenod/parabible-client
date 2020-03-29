@@ -21,6 +21,7 @@ class ParabibleHeader extends React.Component {
 			"searchTerms",
 			"textsToDisplayMainOT",
 			"textsToDisplayMainNT",
+			"themeDark",
 			"stripDiacritics"
 		], this.setState.bind(this))
 	}
@@ -384,6 +385,15 @@ class ParabibleHeader extends React.Component {
 				onClick: this.props.showMorphSettings,
 				iconProps: {
 					iconName: "Tasks"
+				}
+			}, {
+				key: "useLightTheme",
+				name: "Dark Theme",
+				iconProps: {
+					iconName: this.state.themeDark ? "CheckSquare" : "Square"
+				},
+				onClick: function () {
+					DataFlow.set("themeDark", !DataFlow.get("themeDark"))
 				}
 			}, {
 				key: "stripDiacriticsToggle",

@@ -2,6 +2,7 @@
 	"version": 1,
 	"appMessages": [],
 	"highlightTermsSetting": true,
+	"themeDark": false,
 	"activeWid": -1,
 	"worddata": {},
 	"bibledata": null,

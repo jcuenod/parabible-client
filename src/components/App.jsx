@@ -76,11 +76,12 @@ registerIcons({
 	}
 })
 
-const myTheme = loadTheme({
-	defaultFontStyle: { 
-		fontFamily: 'Ubuntu'
-		/* can add stuff like font-weight here as well */
-	},
+const defaultFontStyle = {
+	fontFamily: 'Ubuntu'
+	/* can add stuff like font-weight here as well */
+}
+const lightTheme = {
+	defaultFontStyle,
 	palette: {
 		themePrimary: '#106ebe',
 		themeLighterAlt: '#f3f8fc',
@@ -105,7 +106,35 @@ const myTheme = loadTheme({
 		black: '#000000',
 		white: '#f4f4f4',
 	}
-});
+}
+const darkTheme = {
+	defaultFontStyle,
+	palette: {
+		themePrimary: '#2594e8',
+		themeLighterAlt: '#010609',
+		themeLighter: '#061825',
+		themeLight: '#0b2c46',
+		themeTertiary: '#16598b',
+		themeSecondary: '#2182cc',
+		themeDarkAlt: '#399eea',
+		themeDark: '#56acee',
+		themeDarker: '#80c1f2',
+		neutralLighterAlt: '#323131',
+		neutralLighter: '#3a3939',
+		neutralLight: '#484646',
+		neutralQuaternaryAlt: '#504e4e',
+		neutralQuaternary: '#575555',
+		neutralTertiaryAlt: '#747171',
+		neutralTertiary: '#f3f3f3',
+		neutralSecondary: '#f5f5f5',
+		neutralPrimaryAlt: '#f7f7f7',
+		neutralPrimary: '#ededed',
+		neutralDark: '#fbfbfb',
+		black: '#fdfdfd',
+		white: '#292828',
+	}
+}
+const myTheme = loadTheme(DataFlow.get("themeDark") ? darkTheme : lightTheme)
 
 import Header from 'components/Header'
 import Content from 'components/Content'
@@ -179,6 +208,8 @@ class App extends React.Component {
 			}
 		}).watch("appMessages", m => {
 			this.setState({ appMessages: m })
+		}).watch("themeDark", useDarkTheme => {
+			loadTheme(useDarkTheme ? darkTheme : lightTheme)
 		})
 	}
 	setPanelDisplay(panel, visibile) {
