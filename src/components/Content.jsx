@@ -62,12 +62,14 @@ class Content extends React.Component {
 				cursor: "text"
 			}}>
 				{this.state.screenSizeIndex > 1 ? <ContentHeader openColumns={orderedColumns} isNT={isNT} /> : null}
-				{btextHighlight.map(verse =>
-					<RidView
-						key={verse.rid}
-						ridDataWithRid={verse}
-						activeWid={this.state.activeWid} />
-				)}
+				<div dangerouslySetInnerHTML={{
+					__html: btextHighlight.map(verse =>
+						RidView({
+							ridDataWithRid: verse,
+							activeWid: this.state.activeWid
+						})
+					).join("")
+				}} />
 				<div style={{ direction: "ltr", fontFamily: "Ubuntu, sans-serif", fontSize: "x-small", marginTop: "40px", paddingTop: "10px", borderTop: "1px solid #aaa" }}>
 					<LicenseView license={orderedColumns} />
 				</div>

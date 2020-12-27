@@ -1,20 +1,23 @@
-import React from 'react'
 import WordBit from './WordBit'
 
-const SBLVerse = ({verseNumber, text, activeWid}) => (
-	<span className="sblVerse">
-		{verseNumber !== false ? (
-			<span style={{
-					color: "#ea4300",
-					verticalAlign: "top",
-					fontSize: "35%",
-					fontWeight: "bold"
-				}}>
-				{verseNumber}&nbsp;
-			</span>) : null}
-		{text ? text.map((word, i) => {
-			return <WordBit key={i} wbit={word} activeWid={activeWid} />
-		}) : null}
-	</span>
+const VerseStyle =
+	"color: #ea4300;" +
+	"vertical-align: top;" +
+	"font-size: 35%;" +
+	"font-weight: bold;" +
+	"white-space: nowrap;"
+
+const SBLVerse = ({ verseNumber, text, activeWid }) => (
+	`<span className="sblVerse">` +
+	(verseNumber !== false ?
+		`<span style="${VerseStyle}">${verseNumber} </span>`
+		: "") +
+	(text ? text.map((word, i) =>
+		WordBit({
+			wbit: word,
+			activeWid: activeWid
+		})).join("")
+		: "") +
+	`</span>`
 )
 export default SBLVerse

@@ -7,21 +7,21 @@ import { generateReference } from 'util/ReferenceHelper'
 
 const wlcDisplay = (rid, wlc, activeWid) => (
 	wlc.map((accentUnit, i) =>
-		<AccentUnit
-			key={i}
-			verseNumber={i === 0 ? (rid % 1000) : false}
-			accentUnit={accentUnit}
-			activeWid={activeWid} />
-	)
+		AccentUnit({
+			verseNumber: (i === 0 ? (rid % 1000) : false),
+			accentUnit: accentUnit,
+			activeWid: activeWid
+		})
+	).join("")
 )
 const lxxDisplay = (rid, lxx, activeWid) => (
 	lxx ? Object.keys(lxx).map(verseUnit => (
-		<LXXVerse
-			key={verseUnit}
-			verseNumber={verseUnit.replace(/^[\d\w]+\s/, "")}
-			lxxVerse={lxx[verseUnit]}
-			activeWid={activeWid} />
-	)) : null
+		LXXVerse({
+			verseNumber: verseUnit.replace(/^[\d\w]+\s/, ""),
+			lxxVerse: lxx[verseUnit],
+			activeWid: activeWid
+		})
+	)) : ""
 )
 const sblDisplay = (rid, sbl, activeWid) => (
 	sbl ? <SBLVerse
@@ -29,58 +29,57 @@ const sblDisplay = (rid, sbl, activeWid) => (
 		verseNumber={rid % 1000}
 		text={sbl}
 		activeWid={activeWid} />
-		: null
+		: ""
 )
-const netDisplay = (rid, net, activeWid) => {
-	return <div dangerouslySetInnerHTML={{ __html: net }} />
-}
+const netDisplay = (rid, net, activeWid) => net
+
 
 const textHelper = {
 	"wlc": {
-		styles: { display: "table-cell", verticalAlign: "top", direction: "rtl", fontSize: "x-large", padding: "3px 5px", fontFamily: "SBL Biblit" },
+		styles: "display: table-cell; vertical-align: top; padding: 3px 5px; font-size: x-large; font-family: SBL Biblit; direction: rtl;",
 		function: wlcDisplay
 	},
 	"sbl": {
-		styles: { display: "table-cell", verticalAlign: "top", padding: "3px 5px", fontSize: "large", fontFamily: "SBL Biblit" },
+		styles: "display: table-cell; vertical-align: top; padding: 3px 5px; font-size: large; font-family: SBL Biblit;",
 		function: sblDisplay
 	},
 	"net": {
-		styles: { display: "table-cell", verticalAlign: "top", padding: "3px 5px", fontSize: "medium" },
+		styles: "display: table-cell; vertical-align: top; padding: 3px 5px; font-size: medium;",
 		function: netDisplay
 	},
 	"lxx": {
-		styles: { display: "table-cell", verticalAlign: "top", padding: "3px 5px", fontSize: "large", fontFamily: "SBL Biblit" },
+		styles: "display: table-cell; vertical-align: top; padding: 3px 5px; font-size: large; font-family: SBL Biblit;",
 		function: lxxDisplay
 	}
 }
+
+const parallelStyle = active =>
+	`display: table;` +
+	`tableLayout: fixed;` +
+	`width: 100%;` +
+	`direction: ltr;` +
+	`background-color: ${active ? "rgba(255,255,0,0.3)" : ""}`
 // TODO: Do something actual with fonts for LXX
 const parallelView = ({ rid, activeWid, ridData, thisVerseActive }) => (
-	<div className="contiguousrid" data-rid={rid} id={thisVerseActive ? "activeVerse" : ""} style={{ display: "table", tableLayout: "fixed", width: "100%", direction: "ltr", backgroundColor: thisVerseActive ? "rgba(255,255,0,0.3)" : "" }}>
-		{DataFlow.get(rid >= 400000000 ? "textsToDisplayMainNT" : "textsToDisplayMainOT").map(text =>
-			ridData.hasOwnProperty(text) ? <div key={text} style={textHelper[text].styles}>
-				{textHelper[text].function(rid, ridData[text], activeWid)}
-			</div> : <div key={text} style={textHelper[text].styles} />
-		)}
-		{/* {ridData.hasOwnProperty("wlc") ? (
-			<div style={{ display: "table-cell", verticalAlign: "top", direction: "rtl", fontSize: "x-large", padding: "3px 5px", fontFamily: fontSetting()}}>
-				{wlcDisplay(rid, ridData.wlc, activeWid)}
-			</div>
-		) : ""}
-		{ridData.hasOwnProperty("sbl") ? (
-			<div style={{ }>
-				{sblDisplay(rid, ridData.sbl, activeWid)}
-			</div>
-		) : ""}
-		{ridData.hasOwnProperty("net") ? (
-			
-		) : ""}
-		{ridData.hasOwnProperty("lxx") ? (
-			<div style={}>
-				{lxxDisplay(rid, ridData.lxx, activeWid)}
-			</div>
-		) : ""} */}
-	</div>
+	`<div className="contiguousrid"
+		data-rid=${rid}
+		id=${thisVerseActive ? "activeVerse" : ""}
+		style="${parallelStyle}">` +
+	DataFlow.get(rid >= 400000000 ? "textsToDisplayMainNT" : "textsToDisplayMainOT").map(text =>
+		ridData.hasOwnProperty(text) ?
+			`<div style="${textHelper[text].styles}"> ` +
+			textHelper[text].function(rid, ridData[text], activeWid) +
+			`</div> `
+			: `<div style="${textHelper[text].styles}" /> `
+	).join("") +
+	`</div>`
 )
+
+const singleTextStyles = (active, large = false) =>
+	`display: inline;` +
+	`font-family: SBL Biblit;` +
+	(large ? "" : `font-size: 80%;`) +
+	`background-color: ${active ? "rgba(255,255,0,0.3)" : ""};`
 
 const isObject = obj => Object.prototype.toString.call(obj).indexOf('Object') !== -1
 const RidView = ({ ridDataWithRid, activeWid }) => {
@@ -108,43 +107,39 @@ const RidView = ({ ridDataWithRid, activeWid }) => {
 		// SINGLE TEXT
 		switch (ridDataKeys[0]) {
 			case "sbl":
-				return <div className="contiguousrid" id={thisVerseActive ? "activeVerse" : ""} style={{
-					display: "inline",
-					fontFamily: "SBL Biblit",
-					fontSize: '80%',
-					backgroundColor: thisVerseActive ? "rgba(255,255,0,0.3)" : ""
-				}} data-rid={rid}>
-					{sblDisplay(rid, ridData.sbl, activeWid)}
-				</div>
+				return `<span ` +
+					`className="contiguousrid" ` +
+					`id=${thisVerseActive ? "activeVerse" : ""} ` +
+					`style="${singleTextStyles(thisVerseActive)}" ` +
+					`data-rid=${rid}>` +
+					sblDisplay(rid, ridData.sbl, activeWid) +
+					`</span>`
 			case "lxx":
-				return <div className="contiguousrid" id={thisVerseActive ? "activeVerse" : ""} style={{
-					display: "inline",
-					fontFamily: "SBL Biblit",
-					fontSize: '80%',
-					backgroundColor: thisVerseActive ? "rgba(255,255,0,0.3)" : ""
-				}} data-rid={rid}>
-					{lxxDisplay(rid, ridData.lxx, activeWid)}
-				</div>
+				return `<span ` +
+					`className="contiguousrid" ` +
+					`id=${thisVerseActive ? "activeVerse" : ""} ` +
+					`style="${singleTextStyles(thisVerseActive)}" ` +
+					`data-rid=${rid}>` +
+					lxxDisplay(rid, ridData.lxx, activeWid) +
+					`</span>`
 			case "net":
-				return <div className="contiguousrid" id={thisVerseActive ? "activeVerse" : ""} style={{
-					display: "inline",
-					fontSize: '80%',
-					backgroundColor: thisVerseActive ? "rgba(255,255,0,0.3)" : ""
-				}} data-rid={rid}>
-					<span dangerouslySetInnerHTML={{ __html: ridData.net }} />
-				</div>
+				return `<span ` +
+					`className="contiguousrid" ` +
+					`id=${thisVerseActive ? "activeVerse" : ""} ` +
+					`style="${singleTextStyles(thisVerseActive)}" ` +
+					`data-rid=${rid}>` +
+					ridData.net +
+					`</span>`
 			case "wlc":
-				return <div className="contiguousrid" id={thisVerseActive ? "activeVerse" : ""} style={{
-					display: "inline",
-					fontFamily: "SBL Biblit",
-					backgroundColor: thisVerseActive ? "rgba(255,255,0,0.3)" : ""
-				}} data-rid={rid}>
-					{wlcDisplay(rid, ridData.wlc, activeWid)}
-				</div>
+				return `<span ` +
+					`className="contiguousrid" ` +
+					`id=${thisVerseActive ? "activeVerse" : ""} ` +
+					`style="${singleTextStyles(thisVerseActive, true)}" ` +
+					`data-rid=${rid}>` +
+					wlcDisplay(rid, ridData.wlc, activeWid) +
+					`</span>`
 			default:
-				return <div style={{ display: "inline" }} data-rid={rid}>
-					{ridData[ridDataKeys[0]]}
-				</div>
+				return `<span style="display: inline" data-rid=${rid}>${ridData[ridDataKeys[0]]}</span>`
 		}
 	}
 }
