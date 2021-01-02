@@ -39,7 +39,12 @@ let exportObject = {
 		extensions: ['.jsx', '.js', '.json'],
 		modules: [path.resolve(__dirname, 'src'), 'node_modules']
 	},
-	plugins: [new Visualizer()]
+	plugins: [
+		new Visualizer(),
+		new webpack.ProvidePlugin({
+			"React": "react",
+		}),
+	]
 }
 
 if (process.env.NODE_ENV === 'production') {

@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Footer = () => {
 	return <div style={{
 		fontFamily: "Ubuntu, sans-serif",

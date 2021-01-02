@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'
 import { ContextualMenuItemType } from 'office-ui-fabric-react/lib/ContextualMenu'
 import generateSearchTermMenuItem from './SearchTermMenuItem'
@@ -10,7 +10,7 @@ import AppNotify from 'util/AppNotify'
 
 import { isNewTestament } from 'util/ReferenceHelper'
 
-class ParabibleHeader extends React.Component {
+class ParabibleHeader extends Component {
 	constructor(props) {
 		super(props)
 		this.state = DataFlow.bindState([

@@ -1,4 +1,3 @@
-import React from 'react'
 import AccentUnit from './AccentUnit'
 import LXXVerse from './LXXVerse'
 import SBLVerse from './SBLVerse'

@@ -1,4 +1,3 @@
-import React from 'react'
 import WordBit from './WordBit'
 
 const LXXVerse = ({ verseNumber, lxxVerse, activeWid }) => (

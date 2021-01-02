@@ -1,4 +1,3 @@
-import React from 'react'
 import DataFlow from 'util/DataFlow'
 import { isNewTestament } from 'util/ReferenceHelper'
 

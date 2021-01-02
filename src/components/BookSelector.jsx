@@ -1,10 +1,10 @@
-import React from 'react'
+import { Component } from 'react'
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel'
 import { Nav } from 'office-ui-fabric-react/lib/Nav'
 import DataFlow from 'util/DataFlow'
 import bookDetails from 'data/bookDetails'
 
-class BookSelector extends React.Component {
+class BookSelector extends Component {
 	constructor(props) {
 		super(props)
 		this.state = DataFlow.bindState([

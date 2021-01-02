@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import DataFlow from 'util/DataFlow'
 import RidView from 'components/RidView'
 import LicenseView from 'components/LicenseView'
@@ -6,7 +6,7 @@ import ContentHeader from 'components/ContentHeader'
 import ApiRequest from 'util/ApiRequest'
 import { isNewTestament } from 'util/ReferenceHelper'
 
-class Content extends React.Component {
+class Content extends Component {
 	constructor(props) {
 		super(props)
 		this.state = DataFlow.bindState([

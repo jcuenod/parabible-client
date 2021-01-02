@@ -1,4 +1,3 @@
-import React from 'react'
 import WordBit from './WordBit'
 
 const AccentUnit = ({ verseNumber, accentUnit, activeWid }) => [
@@ -10,7 +9,7 @@ const AccentUnit = ({ verseNumber, accentUnit, activeWid }) => [
 			fontWeight: "bold"
 		}}>
 			{verseNumber}&nbsp;
-			</span>) : null,
+		</span>) : null,
 	...accentUnit.map((bit, i) => (
 		<WordBit key={i} keyIndex={i} wbit={bit} activeWid={activeWid} />
 	))

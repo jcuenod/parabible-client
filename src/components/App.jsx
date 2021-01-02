@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 
 import { registerIcons, loadTheme } from '@uifabric/styling'
 import {

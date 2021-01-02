@@ -1,4 +1,3 @@
-import React from 'react'
 import { List } from 'office-ui-fabric-react/lib/List'
 import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button'
 import DataFlow from 'util/DataFlow'

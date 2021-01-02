@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { PrimaryButton } from 'office-ui-fabric-react/lib/Button'
 import DataFlow from 'util/DataFlow'
 import AppNotify from 'util/AppNotify'
@@ -10,7 +10,7 @@ const hebrewCategories = ["lex_utf8", "g_cons_utf8", "g_word_utf8", "voc_utf8", 
 // lxxlexeme is on the hebrew data, lexeme is on CCAT
 const greekCategories = ["lxxlexeme", "lexeme"]
 
-class MorphologySidebar extends React.Component {
+class MorphologySidebar extends Component {
 	constructor(props) {
 		super(props)
 		DataFlow.watch("worddata", () => {

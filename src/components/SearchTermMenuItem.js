@@ -1,4 +1,3 @@
-import React from 'react'
 import DataFlow from 'util/DataFlow'
 
 import { ContextualMenuItemType } from 'office-ui-fabric-react/lib/ContextualMenu'

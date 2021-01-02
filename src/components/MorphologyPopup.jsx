@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import DataFlow from '../util/DataFlow'
 import Abbreviations from 'data/abbreviations'
 
@@ -9,7 +9,7 @@ const o = (obj, prop) => {
 	return ""
 }
 
-class MorphologySidebar extends React.Component {
+class MorphologySidebar extends Component {
 	constructor(props) {
 		super(props)
 		this.state = { "worddata": {} }

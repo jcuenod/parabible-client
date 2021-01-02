@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react'
 import DataFlow from 'util/DataFlow'
 import Abbreviations from 'data/abbreviations'
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
@@ -18,7 +18,7 @@ const OptionItem = ({ value, checked, toggleCheck }) => {
 	)
 }
 
-class OptionComponent extends React.Component {
+class OptionComponent extends Component {
 	toggleCheck(value, checked) {
 		const morphSettings = DataFlow.get("morphSettings")
 		const newState = morphSettings.map(m => {
@@ -60,7 +60,7 @@ const checkMorphsAreAllAvailable = () => {
 	})
 	DataFlow.set("morphSettings", mset)
 }
-class MorphologySettings extends React.Component {
+class MorphologySettings extends Component {
 	render() {
 		checkMorphsAreAllAvailable()
 		return (
