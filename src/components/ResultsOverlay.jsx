@@ -7,7 +7,7 @@ import RidView from './RidView'
 
 const RESULTS_PER_PAGE = 10
 
-const PageNumbers = ({range, active, selectPage, maxNumbersToShow}) => {
+const PageNumbers = ({ range, active, selectPage, maxNumbersToShow }) => {
 	const halfMaxNumbersToShow = ((maxNumbersToShow - 1) / 2)
 	let startingIndex
 	let pages = [...Array(range).keys()]
@@ -45,38 +45,38 @@ const PageNumbers = ({range, active, selectPage, maxNumbersToShow}) => {
 	))
 }
 
-const Pagination = ({range, active, selectPage, maxNumbersToShow}) => !!range && (
+const Pagination = ({ range, active, selectPage, maxNumbersToShow }) => !!range && (
 	<div style={{
 		display: 'flex',
 		margin: '20px',
 	}}>
-		<div style={{flexGrow: 1}}/>
+		<div style={{ flexGrow: 1 }} />
 		<IconButton
-			iconProps={{iconName: "ChevronsLeft"}}
+			iconProps={{ iconName: "ChevronsLeft" }}
 			onClick={() => selectPage(0)}
 			disabled={active === 0}
-			style={{margin: "2px"}} />
+			style={{ margin: "2px" }} />
 		<IconButton
-			iconProps={{iconName: "ChevronLeft"}}
+			iconProps={{ iconName: "ChevronLeft" }}
 			onClick={() => selectPage(active - 1)}
 			disabled={active === 0}
-			style={{margin: "2px"}} />
+			style={{ margin: "2px" }} />
 		<PageNumbers
 			range={range}
 			active={active}
 			selectPage={selectPage}
 			maxNumbersToShow={maxNumbersToShow} />
 		<IconButton
-			iconProps={{iconName: "ChevronRight"}}
+			iconProps={{ iconName: "ChevronRight" }}
 			onClick={() => selectPage(active + 1)}
 			disabled={active === (range - 1)}
-			style={{margin: "2px"}} />
+			style={{ margin: "2px" }} />
 		<IconButton
-			iconProps={{iconName: "ChevronsRight"}}
+			iconProps={{ iconName: "ChevronsRight" }}
 			onClick={() => selectPage(range - 1)}
 			disabled={active === (range - 1)}
-			style={{margin: "2px"}} />
-		<div style={{flexGrow: 1}}/>
+			style={{ margin: "2px" }} />
+		<div style={{ flexGrow: 1 }} />
 	</div>
 )
 
@@ -90,35 +90,37 @@ class ResultsOverlay extends React.Component {
 		this.resultListDomRef = React.createRef()
 	}
 	selectPage(page) {
-		this.setState({page})
+		this.setState({ page })
 		this.resultListDomRef.current.scrollTop = 0
 	}
 	render() {
-		console.log(this.state.screenSizeIndex)
 		const searchResults = DataFlow.get("searchResults")
+		if (!searchResults || !searchResults.results || !searchResults?.results.length) {
+			return null
+		}
 		const multiline = this.state.screenSizeIndex < 2
 		const useAbbreviation = this.state.screenSizeIndex < 4 && !multiline ? true : false
 		const resultCount = searchResults && Object.keys(searchResults).length > 0 ?
 			(searchResults.truncated ? searchResults.truncated : searchResults.results.length) : "?"
-		const numberOfResults = searchResults && Object.keys(searchResults).length ? searchResults.length : 0
+		// const numberOfResults = searchResults && Object.keys(searchResults).length ? searchResults.length : 0
 		const pageResults = DataFlow.get("searchResults").results
-							.slice(this.state.page * RESULTS_PER_PAGE,
-								   this.state.page * RESULTS_PER_PAGE + RESULTS_PER_PAGE)
-		
+			.slice(this.state.page * RESULTS_PER_PAGE,
+				this.state.page * RESULTS_PER_PAGE + RESULTS_PER_PAGE)
+
 		return (
 			<div style={{
-					visibility: this.props.panelIsVisible ? "visible" : "hidden",
-					position: "fixed",
-					top: 40,
-					bottom: 0,
-					left: 0,
-					right: 0,
-					background: "rgba(255, 255, 255, 0.9)",
-					userSelect: this.state.screenSizeIndex > 2 ? "text" : "none",
-					cursor: "text",
-					overflowY: "scroll",
-					WebkitOverflowScrolling: "touch"
-				}}
+				visibility: this.props.panelIsVisible ? "visible" : "hidden",
+				position: "fixed",
+				top: 40,
+				bottom: 0,
+				left: 0,
+				right: 0,
+				background: "rgba(255, 255, 255, 0.9)",
+				userSelect: this.state.screenSizeIndex > 2 ? "text" : "none",
+				cursor: "text",
+				overflowY: "scroll",
+				WebkitOverflowScrolling: "touch"
+			}}
 				ref={this.resultListDomRef}
 			>
 
@@ -186,37 +188,6 @@ class ResultsOverlay extends React.Component {
 					range={Math.ceil(resultCount / RESULTS_PER_PAGE)}
 					selectPage={this.selectPage.bind(this)}
 					maxNumbersToShow={this.state.screenSizeIndex <= 2 ? 5 : 11} />
-
-				{/*<List
-					items={DataFlow.get("searchResults").results}
-					onRenderCell={(item, index) => (
-						<div style={{
-							display: "flex",
-							flexDirection: multiline ? "column" : "row",
-							padding: multiline ? "5px" : "5px 15px",
-							cursor: "pointer"
-						}} className="resultsRow">
-							<div style={{
-								flexBasis: multiline ? "" : "100px",
-								fontFamily: "Open Sans",
-								fontSize: "small",
-								fontWeight: "bold",
-								textTransform: "uppercase"
-							}}>
-								<a href={generateURL(item.verses[0])} className="verseUrl">
-									{generateReference(item.verses, useAbbreviation)}
-								</a>
-							</div>
-							<div style={{ flex: 1 }}>
-								{item.text.map(t => (
-									<RidView
-										ridDataWithRid={t}
-										activeWid={-1} />
-								))}
-							</div>
-						</div>
-					)}
-				/>*/}
 
 			</div>
 		)
