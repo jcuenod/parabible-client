@@ -1,84 +1,16 @@
 import React from 'react'
 // import { List } from 'office-ui-fabric-react/lib/List'
-import { IconButton, DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button'
+import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button'
 import DataFlow from 'util/DataFlow'
 import { generateReference, generateURL } from 'util/ReferenceHelper'
 import RidView from './RidView'
+import Pagination from './Pagination'
 
 const RESULTS_PER_PAGE = 10
 
-const PageNumbers = ({ range, active, selectPage, maxNumbersToShow }) => {
-	const halfMaxNumbersToShow = ((maxNumbersToShow - 1) / 2)
-	let startingIndex
-	let pages = [...Array(range).keys()]
-	if (range > maxNumbersToShow) {
-		if (active - halfMaxNumbersToShow < 0) {
-			startingIndex = 0
-		}
-		else if (active + halfMaxNumbersToShow >= range) {
-			startingIndex = range - maxNumbersToShow
-		}
-		else {
-			startingIndex = active - halfMaxNumbersToShow
-		}
-
-		pages = pages.slice(startingIndex, startingIndex + maxNumbersToShow)
-		console.log(startingIndex)
-		console.log(pages)
-	}
-	return pages.map(p => (
-		<DefaultButton
-			disabled={p === active}
-			style={{
-				verticalAlign: 'middle',
-				borderRadius: '2px',
-				border: 'none',
-				minWidth: '32px',
-				minHeight: '32px',
-				alignItems: 'center',
-				margin: "2px"
-			}}
-			onClick={() => selectPage(p)}
-		>
-			{p + 1}
-		</DefaultButton>
-	))
-}
-
-const Pagination = ({ range, active, selectPage, maxNumbersToShow }) => !!range && (
-	<div style={{
-		display: 'flex',
-		margin: '20px',
-	}}>
-		<div style={{ flexGrow: 1 }} />
-		<IconButton
-			iconProps={{ iconName: "ChevronsLeft" }}
-			onClick={() => selectPage(0)}
-			disabled={active === 0}
-			style={{ margin: "2px" }} />
-		<IconButton
-			iconProps={{ iconName: "ChevronLeft" }}
-			onClick={() => selectPage(active - 1)}
-			disabled={active === 0}
-			style={{ margin: "2px" }} />
-		<PageNumbers
-			range={range}
-			active={active}
-			selectPage={selectPage}
-			maxNumbersToShow={maxNumbersToShow} />
-		<IconButton
-			iconProps={{ iconName: "ChevronRight" }}
-			onClick={() => selectPage(active + 1)}
-			disabled={active === (range - 1)}
-			style={{ margin: "2px" }} />
-		<IconButton
-			iconProps={{ iconName: "ChevronsRight" }}
-			onClick={() => selectPage(range - 1)}
-			disabled={active === (range - 1)}
-			style={{ margin: "2px" }} />
-		<div style={{ flexGrow: 1 }} />
-	</div>
-)
+// TODO: useHook
+// TODO: Performance seems terrible on large sets (e.g. when there are 500 results)
+// TODO: Make sure popouts work on firefox and chrome (they don't appear to work on chrome)
 
 class ResultsOverlay extends React.Component {
 	constructor(props) {
@@ -100,12 +32,13 @@ class ResultsOverlay extends React.Component {
 		}
 		const multiline = this.state.screenSizeIndex < 2
 		const useAbbreviation = this.state.screenSizeIndex < 4 && !multiline ? true : false
-		const resultCount = searchResults && Object.keys(searchResults).length > 0 ?
-			(searchResults.truncated ? searchResults.truncated : searchResults.results.length) : "?"
-		// const numberOfResults = searchResults && Object.keys(searchResults).length ? searchResults.length : 0
-		const pageResults = DataFlow.get("searchResults").results
-			.slice(this.state.page * RESULTS_PER_PAGE,
-				this.state.page * RESULTS_PER_PAGE + RESULTS_PER_PAGE)
+
+		const truncatedCount = searchResults.truncated || -1
+		const trueCount = searchResults.results.length
+
+		const startOffset = this.state.page * RESULTS_PER_PAGE
+		const endOffset = this.state.page * RESULTS_PER_PAGE + RESULTS_PER_PAGE
+		const pageResults = searchResults.results.slice(startOffset, endOffset)
 
 		return (
 			<div style={{
@@ -131,7 +64,7 @@ class ResultsOverlay extends React.Component {
 					textAlign: "center",
 					padding: "5px"
 				}}>
-					Search Results ({resultCount})
+					Search Results ({truncatedCount > -1 ? `${trueCount}/${truncatedCount}` : trueCount})
 				</div>
 
 				<div style={{
@@ -149,18 +82,20 @@ class ResultsOverlay extends React.Component {
 
 				<Pagination
 					active={this.state.page}
-					range={Math.ceil(resultCount / RESULTS_PER_PAGE)}
+					range={Math.ceil(trueCount / RESULTS_PER_PAGE)}
 					selectPage={this.selectPage.bind(this)}
 					maxNumbersToShow={this.state.screenSizeIndex <= 2 ? 5 : 11} />
 
 				<div>
-					{pageResults.map(item => (
-						<div style={{
-							display: "flex",
-							flexDirection: multiline ? "column" : "row",
-							padding: multiline ? "5px" : "5px 15px",
-							cursor: "pointer"
-						}} className="resultsRow">
+					{pageResults.map((item, i) => (
+						<div key={i}
+							style={{
+								display: "flex",
+								flexDirection: multiline ? "column" : "row",
+								padding: multiline ? "5px" : "5px 15px",
+								cursor: "pointer"
+							}} className="resultsRow"
+						>
 							<div style={{
 								flexBasis: multiline ? "" : "100px",
 								fontFamily: "Open Sans",
@@ -173,8 +108,9 @@ class ResultsOverlay extends React.Component {
 								</a>
 							</div>
 							<div style={{ flex: 1 }}>
-								{item.text.map(t => (
+								{item.text.map((t, j) => (
 									<RidView
+										key={j}
 										ridDataWithRid={t}
 										activeWid={-1} />
 								))}
@@ -185,7 +121,7 @@ class ResultsOverlay extends React.Component {
 
 				<Pagination
 					active={this.state.page}
-					range={Math.ceil(resultCount / RESULTS_PER_PAGE)}
+					range={Math.ceil(trueCount / RESULTS_PER_PAGE)}
 					selectPage={this.selectPage.bind(this)}
 					maxNumbersToShow={this.state.screenSizeIndex <= 2 ? 5 : 11} />
 
