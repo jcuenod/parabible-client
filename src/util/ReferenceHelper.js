@@ -30,7 +30,7 @@ const _getVerse = (rid) => {
 	return rid % 1000
 }
 
-const generateReference = (rids, abbreviation=false) => {
+const generateReference = (rids, abbreviation = false) => {
 	const groupedRids = _groupConsecutiveRids(rids)
 	const ridRefs = groupedRids.map(ridList => {
 		const lastRid = ridList[ridList.length - 1]
@@ -90,6 +90,11 @@ const generateURL = (rid) => {
 	const vs = rid % 1000
 	return `/${bk}/${ch}#${vs}`
 }
+const generateV2RefUrl = (reference) => {
+	const book = +_getBookInt(reference.book) * 1000
+	const chapter = +reference.chapter
+	return book + chapter
+}
 
 const _getBookInt = (book) => {
 	return bookDetails.findIndex(d => d.name === book) + 1
@@ -103,7 +108,7 @@ const generateRid = (reference) => {
 }
 
 const isNewTestament = (reference) => {
-	const {book} = reference
+	const { book } = reference
 	return bookDetails.findIndex(d => d.name === book) > 38
 }
-export { generateReference, generateURL, generateRid, isNewTestament }
+export { generateReference, generateURL, generateV2RefUrl, generateRid, isNewTestament }

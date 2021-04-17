@@ -2,8 +2,11 @@
 	"version": 1,
 	"appMessages": [],
 	"highlightTermsSetting": true,
-	"activeWid": -1,
-	"worddata": {},
+	"activeWid": {
+		"wid": -1,
+		"module_id": -1
+	},
+	"worddata": [],
 	"bibledata": null,
 	"termConstruction": {},
 	"searchTerms": [],
@@ -18,52 +21,17 @@
 		"chapter": 1
 	},
 	"activeVerse": 0,
-	"morphSettings": [{
-			"heading": "voc_utf8",
+	"morphSettings": [
+		{
+			"heading": "realized_lexeme",
 			"visible": true
 		},
 		{
-			"heading": "sp",
+			"heading": "part_of_speech",
 			"visible": true
 		},
 		{
-			"heading": "vs",
-			"visible": true
-		},
-		{
-			"heading": "vt",
-			"visible": true
-		},
-		{
-			"heading": "ps",
-			"visible": true
-		},
-		{
-			"heading": "nu",
-			"visible": true
-		},
-		{
-			"heading": "gn",
-			"visible": true
-		},
-		{
-			"heading": "sdbh",
-			"visible": true
-		},
-		{
-			"heading": "lxxlexeme",
-			"visible": true
-		},
-		{
-			"heading": "gloss",
-			"visible": true
-		},
-		{
-			"heading": "lexeme",
-			"visible": true
-		},
-		{
-			"heading": "pos",
+			"heading": "stem",
 			"visible": true
 		},
 		{
@@ -79,15 +47,11 @@
 			"visible": true
 		},
 		{
-			"heading": "person",
-			"visible": true
-		},
-		{
 			"heading": "case",
 			"visible": true
 		},
 		{
-			"heading": "gender",
+			"heading": "person",
 			"visible": true
 		},
 		{
@@ -95,17 +59,31 @@
 			"visible": true
 		},
 		{
-			"heading": "gk_gloss",
+			"heading": "gender",
 			"visible": true
 		},
 		{
-			"heading": "tc_note",
+			"heading": "sdbh",
+			"visible": true
+		},
+		{
+			"heading": "lxxlexeme",
+			"visible": true
+		},
+		{
+			"heading": "gloss",
 			"visible": true
 		}
 	],
 	"screenSizeIndex": 0,
 	"fontSetting": "SBL BibLit",
-	"textsToDisplayMainNT": ["sbl"],
-	"textsToDisplayMainOT": ["wlc"],
+	"textsToDisplayMainNT": [
+		"Nestle1904",
+		"ULT"
+	],
+	"textsToDisplayMainOT": [
+		"BHSA",
+		"ULT"
+	],
 	"stripDiacritics": true
 }

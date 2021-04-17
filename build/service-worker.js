@@ -1,5 +1,5 @@
 var CACHE = 'cache-and-update'
-var CACHE_VERSION = 3
+var CACHE_VERSION = 4
 var urlsToCache = [
 	'/bundle.js',
 	'/fonts/sblbiblit.css',
@@ -12,7 +12,7 @@ var urlsToCache = [
 
 // On install, cache some resources.
 self.addEventListener('install', event => {
-	self.skipWaiting();
+	self.skipWaiting()
 	console.log('The service worker is being installed.')
 	event.waitUntil(() => {
 		return caches.open(CACHE).then(cache => {
@@ -21,11 +21,11 @@ self.addEventListener('install', event => {
 	})
 })
 
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
 	event.waitUntil(
-		caches.keys().then(function(cacheNames) {
+		caches.keys().then(function (cacheNames) {
 			return Promise.all(
-				cacheNames.map(function(cacheName) {
+				cacheNames.map(function (cacheName) {
 					if (CACHE === cacheName) {
 						console.log('Deleting out of date cache:', cacheName)
 						return caches.delete(cacheName)
@@ -37,8 +37,8 @@ self.addEventListener('activate', function(event) {
 })
 
 self.addEventListener('fetch', event => {
-	event.respondWith(fromCache(event.request))
 	event.waitUntil(update(event.request))
+	event.respondWith(fromCache(event.request))
 })
 
 function fromCache(request) {

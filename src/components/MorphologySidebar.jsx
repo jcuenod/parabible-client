@@ -24,7 +24,7 @@ class MorphologySidebar extends React.Component {
 	toggleTermProperties(props) {
 		//TODO: allow searching on the LXX
 		if (DataFlow.get("activeWid") >= 500000) {
-			AppNotify.send({ type: "warning", message: "Sorry, parabible does not yet support searching outside the BHS (but it's coming...)"})
+			AppNotify.send({ type: "warning", message: "Sorry, parabible does not yet support searching outside the BHS (but it's coming...)" })
 			return
 		}
 
@@ -60,73 +60,74 @@ class MorphologySidebar extends React.Component {
 	}
 	render() {
 		const wdata = DataFlow.get("worddata")
+		const dKeys = new Set(wdata.map(d => d.key))
 		const selectedValues = Object.keys(DataFlow.get("termConstruction"))
 		const morphSettings = DataFlow.get("morphSettings")
-		const dataToDisplay = morphSettings.filter(m => m.visible && wdata.hasOwnProperty(m.heading)).map(m => {
-			return { heading: m.heading, value: wdata[m.heading] }
-		})
+		const dataToDisplay = morphSettings.filter(m => m.visible && dKeys.has(m.heading)).map(m =>
+			wdata.find(w => w.key === m.heading)
+		)
 		return <div style={{
-				position: "sticky",
-				boxSizing: "border-box",
-				top: "25px",
-				padding: "0 0 30px 15px",
-				maxHeight: "calc(100vh - 65px)",
-				overflow: "auto",
-				fontSize: "small",
-				fontFamily: "Open Sans"
-				}}>
+			position: "sticky",
+			boxSizing: "border-box",
+			top: "25px",
+			padding: "0 0 30px 15px",
+			maxHeight: "calc(100vh - 65px)",
+			overflow: "auto",
+			fontSize: "small",
+			fontFamily: "Open Sans"
+		}}>
 			{dataToDisplay.map((d, i) => {
-				const highlightData = selectedValues.indexOf(d.heading) > -1 ? { 
+				const highlightData = selectedValues.indexOf(d.key) > -1 ? {
 					color: "#deecf9",
 					backgroundColor: "#0078d7"
 				} : {}
-				const translatedHeading = Abbreviations.termToEnglish.categories.hasOwnProperty(d.heading) ?
-					Abbreviations.termToEnglish.categories[d.heading] : d.heading
-				const translatedValue = Abbreviations.termToEnglish[d.heading] ?
-					Abbreviations.termToEnglish[d.heading][d.value] : d.value
+				const translatedHeading = Abbreviations.termToEnglish.categories.hasOwnProperty(d.key) ?
+					Abbreviations.termToEnglish.categories[d.key] : d.key
+				const translatedValue = Abbreviations.termToEnglish[d.key] ?
+					Abbreviations.termToEnglish[d.key][d.value] : d.value
 				//TODO: Consider greekCategories (need a font setting...)
 				const fontSettings = {}
-				if (hebrewCategories.indexOf(d.heading) > -1) {
+				if (hebrewCategories.indexOf(d.key) > -1) {
 					fontSettings["fontFamily"] = DataFlow.get("fontSetting")
 					fontSettings["fontSize"] = "large"
 				}
-				else if (greekCategories.indexOf(d.heading) > -1) {
+				else if (greekCategories.indexOf(d.key) > -1) {
 					fontSettings["fontFamily"] = "SBL BibLit"
 					fontSettings["fontSize"] = "120%"
 				}
 				return <div key={i} className="mrow" style={Object.assign({
-						display: "flex",
-						flexFlow: "row wrap",
-						alignItems: "center",
-						padding: "3px 10px",
-						cursor: "pointer",
-						userSelect: "text"
-					}, highlightData)}
+					display: "flex",
+					flexFlow: "row wrap",
+					alignItems: "center",
+					padding: "3px 10px",
+					cursor: "pointer",
+					userSelect: "text"
+				}, highlightData)}
 					onClick={() => this.toggleTermProperties(d)}>
 					<div className="mheading" style={{
-							flexBasis: "40%",
-							fontSize: "80%",
-							fontWeight: "bold",
-							textTransform: "uppercase"
-						}}>
+						flexBasis: "40%",
+						fontSize: "80%",
+						fontWeight: "bold",
+						textTransform: "uppercase"
+					}}>
 						{translatedHeading}
 					</div>
 					<div className="mvalue" style={Object.assign({
-								marginLeft: "15px"
-							}, fontSettings
-						)}>
+						marginLeft: "15px"
+					}, fontSettings
+					)}>
 						{translatedValue}
 					</div>
 				</div>
 			})}
-			<div style={{padding: "5px 10px"}}>
-			{Object.keys(wdata).length > 0 && (
-				<PrimaryButton
-					disabled={selectedValues.length === 0}
-					iconProps={{ iconName: 'Add' }}
-					text='Create Search Term'
-					onClick={this.createSearchTerm.bind(this)} />
-			)}
+			<div style={{ padding: "5px 10px" }}>
+				{Object.keys(wdata).length > 0 && (
+					<PrimaryButton
+						disabled={selectedValues.length === 0}
+						iconProps={{ iconName: 'Add' }}
+						text='Create Search Term'
+						onClick={this.createSearchTerm.bind(this)} />
+				)}
 			</div>
 			<div style={{ height: "30px" }}></div>
 		</div>

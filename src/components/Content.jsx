@@ -1,8 +1,8 @@
 import React from 'react'
 import DataFlow from 'util/DataFlow'
 import RidView from 'components/RidView'
-import LicenseView from 'components/LicenseView'
-import ContentHeader from 'components/ContentHeader'
+// import LicenseView from 'components/LicenseView'
+// import ContentHeader from 'components/ContentHeader'
 import ApiRequest from 'util/ApiRequest'
 import { isNewTestament } from 'util/ReferenceHelper'
 
@@ -61,7 +61,7 @@ class Content extends React.Component {
 				userSelect: DataFlow.get("screenSizeIndex") > 2 ? "text" : "none",
 				cursor: "text"
 			}}>
-				{this.state.screenSizeIndex > 1 ? <ContentHeader openColumns={orderedColumns} isNT={isNT} /> : null}
+				{/* {this.state.screenSizeIndex > 1 ? <ContentHeader openColumns={orderedColumns} isNT={isNT} /> : null} */}
 				{btextHighlight.map(verse =>
 					<RidView
 						key={verse.rid}
@@ -69,7 +69,7 @@ class Content extends React.Component {
 						activeWid={this.state.activeWid} />
 				)}
 				<div style={{ direction: "ltr", fontFamily: "sans-serif", fontSize: "x-small", marginTop: "40px", paddingTop: "10px", borderTop: "1px solid #aaa" }}>
-					<LicenseView license={orderedColumns} />
+					{/* <LicenseView license={orderedColumns} /> */}
 				</div>
 			</div>
 		)

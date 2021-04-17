@@ -1,88 +1,69 @@
+import { Stylesheet } from '@uifabric/merge-styles'
 import React from 'react'
-import AccentUnit from './AccentUnit'
-import LXXVerse from './LXXVerse'
-import SBLVerse from './SBLVerse'
 import DataFlow from 'util/DataFlow'
 import { generateReference } from 'util/ReferenceHelper'
 
-const fontSetting = () => {
-	return `"${DataFlow.get("fontSetting")}", "SBL Biblit", "Open Sans", "Arial"`
-}
+// const fontSetting = () => {
+// 	return `"${DataFlow.get("fontSetting")}", "SBL Biblit", "Open Sans", "Arial"`
+// }
 
-const wlcDisplay = (rid, wlc, activeWid) => (
-	wlc.map((accentUnit, i) =>
-		<AccentUnit
-			key={i}
-			verseNumber={i === 0 ? (rid % 1000) : false}
-			accentUnit={accentUnit}
-			activeWid={activeWid} />
-	)
-)
-const lxxDisplay = (rid, lxx, activeWid) => (
-	lxx ? Object.keys(lxx).map(verseUnit => (
-		<LXXVerse
-			key={verseUnit}
-			verseNumber={verseUnit.replace(/^[\d\w]+\s/, "")}
-			lxxVerse={lxx[verseUnit]}
-			activeWid={activeWid} />
-	)) : null
-)
-const sblDisplay = (rid, sbl, activeWid) => (
-	sbl ? <SBLVerse
-		key={rid % 1000}
-		verseNumber={rid % 1000}
-		text={sbl}
-		activeWid={activeWid} />
-		: null
-)
-const netDisplay = (rid, net, activeWid) => {
-	return <div dangerouslySetInnerHTML={{ __html: net }} />
+const wordOnClick = (wid, module_id) => (event) => {
+	DataFlow.set("activeWid", { wid, module_id })
 }
+const Word = ({ text, wid, moduleId, activeWid }) =>
+	<span
+		className="wbit"
+		onClick={wordOnClick(wid, moduleId)}
+		style={{ color: (activeWid.wid === wid && activeWid.module_id === moduleId) ? "#0078d7" : "inherit" }}
+	>
+		{text}
+	</span>
+const TextArrayDisplay = ({ moduleId, rid, textArray, activeWid }) =>
+	<div style={{ display: "table-cell" }}>
+		{textArray.map(({ wid, leader = "", text, trailer = "" }) =>
+			[leader, <Word text={text} wid={wid} moduleId={moduleId} activeWid={activeWid} />, trailer]
+		)}
+	</div>
 
-const textHelper = {
-	"wlc": {
-		styles: { display: "table-cell", verticalAlign: "top", direction: "rtl", fontSize: "x-large", padding: "3px 5px", fontFamily: DataFlow.get("fontSetting") },
-		function: wlcDisplay
-	},
-	"sbl": {
-		styles: { display: "table-cell", verticalAlign: "top", padding: "3px 5px", fontSize: "large", fontFamily: DataFlow.get("fontSetting") },
-		function: sblDisplay
-	},
-	"net": {
-		styles: { display: "table-cell", verticalAlign: "top", padding: "3px 5px", fontSize: "medium" },
-		function: netDisplay
-	},
-	"lxx": {
-		styles: { display: "table-cell", verticalAlign: "top", padding: "3px 5px", fontSize: "large", fontFamily: DataFlow.get("fontSetting") },
-		function: lxxDisplay
-	}
-}
+const TextStringDisplay = ({ rid, textString }) =>
+	<div style={{ display: "table-cell" }} dangerouslySetInnerHTML={{ __html: textString }} />
+
+
+// const textHelper = {
+// 	"wlc": {
+// 		styles: { display: "table-cell", verticalAlign: "top", direction: "rtl", fontSize: "x-large", padding: "3px 5px", fontFamily: DataFlow.get("fontSetting") },
+// 		function: wlcDisplay
+// 	},
+// 	"sbl": {
+// 		styles: { display: "table-cell", verticalAlign: "top", padding: "3px 5px", fontSize: "large", fontFamily: DataFlow.get("fontSetting") },
+// 		function: sblDisplay
+// 	},
+// 	"net": {
+// 		styles: { display: "table-cell", verticalAlign: "top", padding: "3px 5px", fontSize: "medium" },
+// 		function: netDisplay
+// 	},
+// 	"lxx": {
+// 		styles: { display: "table-cell", verticalAlign: "top", padding: "3px 5px", fontSize: "large", fontFamily: DataFlow.get("fontSetting") },
+// 		function: lxxDisplay
+// 	}
+// }
 // TODO: Do something actual with fonts for LXX
 const parallelView = ({ rid, activeWid, ridData, thisVerseActive }) => (
 	<div className="contiguousrid" data-rid={rid} id={thisVerseActive ? "activeVerse" : ""} style={{ display: "table", tableLayout: "fixed", width: "100%", direction: "ltr", backgroundColor: thisVerseActive ? "rgba(255,255,0,0.3)" : "" }}>
-		{DataFlow.get(rid >= 400000000 ? "textsToDisplayMainNT" : "textsToDisplayMainOT").map(text =>
-			ridData.hasOwnProperty(text) ? <div key={text} style={textHelper[text].styles}>
-				{textHelper[text].function(rid, ridData[text], activeWid)}
-			</div> : <div key={text} style={textHelper[text].styles} />
+		{ridData.modules.map(({ module_id, rid, text_string, text_array }) =>
+			text_string
+				? <TextStringDisplay
+					key={module_id}
+					moduleId={module_id}
+					rid={rid}
+					textString={text_string} />
+				: <TextArrayDisplay
+					key={module_id}
+					moduleId={module_id}
+					rid={rid}
+					textArray={text_array}
+					activeWid={activeWid} />
 		)}
-		{/* {ridData.hasOwnProperty("wlc") ? (
-			<div style={{ display: "table-cell", verticalAlign: "top", direction: "rtl", fontSize: "x-large", padding: "3px 5px", fontFamily: fontSetting()}}>
-				{wlcDisplay(rid, ridData.wlc, activeWid)}
-			</div>
-		) : ""}
-		{ridData.hasOwnProperty("sbl") ? (
-			<div style={{ }>
-				{sblDisplay(rid, ridData.sbl, activeWid)}
-			</div>
-		) : ""}
-		{ridData.hasOwnProperty("net") ? (
-			
-		) : ""}
-		{ridData.hasOwnProperty("lxx") ? (
-			<div style={}>
-				{lxxDisplay(rid, ridData.lxx, activeWid)}
-			</div>
-		) : ""} */}
 	</div>
 )
 

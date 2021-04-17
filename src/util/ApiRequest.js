@@ -1,7 +1,7 @@
 import DataFlow from './DataFlow'
-import { Xhr, apiEndpoints } from './Xhr'
+import { Xhr, XhrGet, apiEndpoints } from './Xhr'
 import AppNotify from 'util/AppNotify'
-import { isNewTestament } from 'util/ReferenceHelper'
+import { isNewTestament, generateV2RefUrl } from 'util/ReferenceHelper'
 
 const chapterReload = () => {
 	ApiRequest("chapterText")
@@ -44,8 +44,7 @@ DataFlow
 	})
 	.watch("searchResults", (sr) => {
 		/* This function is just to notify the user when results are truncated */
-		if (sr.truncated)
-		{
+		if (sr.truncated) {
 			AppNotify.send({
 				type: "warning",
 				message: `Your search returned too many results so we're only displaying ${sr.results.length} of them.`
@@ -68,9 +67,10 @@ const ApiRequest = (endpoint) => {
 	let payload = {}
 	switch (endpoint) {
 		case "wordLookup":
-			payload = { "wid": DataFlow.get("activeWid") }
-			Xhr(endpoint, payload).then(result => {
-				DataFlow.set("worddata", result.results)
+			const { wid, module_id } = DataFlow.get("activeWid")
+			const url = `http://localhost:8080/api/v2/word/${module_id}/${wid}`
+			XhrGet(url).then(result => {
+				DataFlow.set("worddata", result.data)
 			})
 			break
 		case "chapterText":
@@ -78,33 +78,39 @@ const ApiRequest = (endpoint) => {
 			let texts = []
 			if (isNewTestament(ref)) {
 				texts = DataFlow.get("textsToDisplayMainNT")
-				const need = !["net", "sbl"].reduce((a, t) => a || texts.includes(t), false)
+				const need = !["ULT", "Netsle1904"].reduce((a, t) => a || texts.includes(t), false)
 				if (need) {
-					texts.push("sbl")
+					texts.shift("Nestle1904")
 				}
 			}
 			else {
 				texts = DataFlow.get("textsToDisplayMainOT")
-				const need = !["net", "wlc", "lxx"].reduce((a, t) => a || texts.includes(t), false)
+				const need = !["ULT", "BHSA", "LXX"].reduce((a, t) => a || texts.includes(t), false)
 				if (need) {
-					texts.push("wlc")
+					texts.shift("BHSA")
 				}
 			}
-			payload = {
-				"reference": ref,
-				"texts": texts
-			}
-			if (DataFlow.get("highlightTermsSetting") && DataFlow.get("searchTerms").length > 0) {
-				payload["search_terms"] = DataFlow.get("searchTerms")
-			}
-			Xhr(endpoint, payload).then(result => {
-				DataFlow.set("bibledata", result.text)
-				DataFlow.set("searchHighlights", result.highlights)
-				// DataFlow.set("reference", result.reference)
+			// payload = {
+			// 	"reference": ref,
+			// 	"texts": texts
+			// }
+			// if (DataFlow.get("highlightTermsSetting") && DataFlow.get("searchTerms").length > 0) {
+			// 	payload["search_terms"] = DataFlow.get("searchTerms")
+			// }
+			const chapterRef = generateV2RefUrl(ref)
+			const urlEncodedTexts = texts.join("+")
+			const urlEndpoint = `http://localhost:8080/api/v2/chapter/${urlEncodedTexts}/${chapterRef}`
+			XhrGet(urlEndpoint).then(result => {
+				DataFlow.set("bibledata", result.data)
 			})
+			// Xhr(endpoint, payload).then(result => {
+			// 	DataFlow.set("bibledata", result.text)
+			// 	DataFlow.set("searchHighlights", result.highlights)
+			// 	// DataFlow.set("reference", result.reference)
+			// })
 			break
 		case "termSearch":
-			const searchTexts = Array.from(new Set( DataFlow.get("textsToDisplayMainNT").concat(DataFlow.get("textsToDisplayMainOT"))))
+			const searchTexts = Array.from(new Set(DataFlow.get("textsToDisplayMainNT").concat(DataFlow.get("textsToDisplayMainOT"))))
 			payload = {
 				"query": DataFlow.get("searchTerms"),
 				"search_range": DataFlow.get("searchRangeSetting"),

@@ -31,7 +31,7 @@ const Xhr = (api, payload) => {
 		}).then(response => {
 			return response.json()
 		}).then(response => {
-			
+
 			resolve(response)
 			delete cancelController[api]
 
@@ -47,4 +47,39 @@ const Xhr = (api, payload) => {
 		})
 	})
 }
-export { Xhr, apiEndpoints }
+const XhrGet = (url) => {
+	return new Promise((resolve, reject) => {
+		// if (!apiUrl.hasOwnProperty(api)) {
+		// 	console.log("api request not found in apiurl object", api)
+		// 	reject(null)
+		// }
+		cancelController.hasOwnProperty(url) ? cancelController[url].abort() : null
+		cancelController[url] = new AbortController()
+		const signal = cancelController[url].signal
+		// const url = apiRoot + apiUrl[api]
+		fetch(url, {
+			method: "GET",
+			headers: {
+				"content-type": "application/json; charset=utf-8"
+			},
+			signal
+		}).then(response => {
+			return response.json()
+		}).then(response => {
+
+			resolve(response)
+			delete cancelController[url]
+
+		}).catch(error => {
+			if (error.code === 20) {
+				reject("Aborted request (throttling)")
+			}
+			else {
+				console.log(error)
+				reject("some kind of error happened in the fetch")
+			}
+			delete cancelController[url]
+		})
+	})
+}
+export { Xhr, XhrGet, apiEndpoints }

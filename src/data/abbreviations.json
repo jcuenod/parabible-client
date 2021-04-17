@@ -1,18 +1,11 @@
 {
 	"termToEnglish": {
 		"categories": {
-			"sp": "Part of Speech",
-			"vs": "Stem",
-			"vt": "Tense",
-			"lex": "Sense Lexeme",
-			"lex_utf8": "Sense Lexeme",
+			"realized_lexeme": "Lexeme",
+			"part_of_speech": "Part of Speech",
+			"stem": "Stem",
 			"g_cons_utf8": "Inflected Consonants",
 			"g_word_utf8": "Word in Text",
-			"voc_utf8": "Root",
-			"tricons": "Consonantal Root",
-			"ps": "Person",
-			"gn": "Gender",
-			"nu": "Number",
 			"g_prs_utf8": "Pronominal Suffix",
 			"prs_gn": "Prn. sfx Gender",
 			"prs_nu": "Prn. sfx Number",
@@ -32,8 +25,6 @@
 			"v": "Verse",
 			"lexeme": "Lexeme",
 			"morphology": "Morphology* (LXX)",
-
-			"pos": "Part of Speech",
 			"tense": "Tense",
 			"voice": "Voice",
 			"mood": "Mood",
@@ -44,14 +35,13 @@
 			"declension": "Declension",
 			"degree": "Degree",
 			"gk_gloss": "Gloss",
-
 			"tc_note": "Text Critical Note"
 		},
 		"is_definite": {
 			"det": "Yes",
 			"und": "No"
 		},
-		"sp": {
+		"part_of_speech": {
 			"art": "Article",
 			"verb": "Verb",
 			"subs": "Noun",
@@ -65,49 +55,38 @@
 			"intj": "Interjection",
 			"nega": "Negative",
 			"inrg": "Interrogative",
-			"adjv": "Adjective"
+			"adjv": "Adjective",
+			"noun": "Noun (duplicate -fix!)",
+			"adj": "Adjective (duplicate -fix!)",
+			"dprn": "Demonstrative Pronoun",
+			"iprn": "Interrogative/Indefinite Pronoun",
+			"ppprn": "Personal/Possessive Pronoun",
+			"rprn": "Relative Pronoun",
+			"ost": "ὅστις",
+			"part": "Particle",
+			"indc": "Indeclinable Number",
+			"adv": "Adverb (duplicate -fix!)"
 		},
-		"nu": {
+		"number": {
 			"sg": "Singular",
 			"du": "Dual",
-			"pl": "Plural",
-			"unknown": "Unknown",
-			"NA": "NA"
+			"pl": "Plural"
 		},
 		"prs_nu": {
 			"sg": "Singular",
 			"du": "Dual",
-			"pl": "Plural",
-			"unknown": "Unknown",
-			"NA": "NA"
-		},
-		"gn": {
-			"m": "Masculine",
-			"f": "Feminine",
-			"unknown": "Unknown",
-			"NA": "NA"
+			"pl": "Plural"
 		},
 		"prs_gn": {
 			"m": "Masculine",
-			"f": "Feminine",
-			"unknown": "Unknown",
-			"NA": "NA"
-		},
-		"ps": {
-			"p1": "First",
-			"p2": "Second",
-			"p3": "Third",
-			"unknown": "Unknown",
-			"NA": "NA"
+			"f": "Feminine"
 		},
 		"prs_ps": {
 			"p1": "First",
 			"p2": "Second",
-			"p3": "Third",
-			"unknown": "Unknown",
-			"NA": "NA"
+			"p3": "Third"
 		},
-		"vt": {
+		"tense": {
 			"perf": "Perfect",
 			"impf": "Imperfect",
 			"wayq": "Wayyiqtol",
@@ -116,9 +95,12 @@
 			"infc": "Infinitive (Construct)",
 			"ptca": "Participle",
 			"ptcp": "Participle (Passive)",
-			"NA": "NA"
+			"pres": "Present",
+			"fut": "Future",
+			"aor": "Aorist",
+			"plupf": "Pluperfect"
 		},
-		"vs": {
+		"stem": {
 			"hif": "Hif‘il (H)",
 			"hit": "Hitpa“el (H)",
 			"htpo": "Hitpo“el (H)",
@@ -146,39 +128,11 @@
 			"pasq": "Passiveqal (Ar)",
 			"NA": "NA"
 		},
-		"st": {
+		"state": {
 			"a": "Absolute",
 			"c": "Construct",
 			"e": "Emphatic",
 			"NA": "NA"
-		},
-
-		"pos": {
-			"noun": "Noun",
-			"verb": "Verb",
-			"adj": "Adjective",
-			
-			"art": "Article",
-			"dprn": "Demonstrative Pronoun",
-			"iprn": "Interrogative/Indefinite Pronoun",
-			"ppprn": "Personal/Possessive Pronoun",
-			"rprn": "Relative Pronoun",
-			"ost": "ὅστις",
-			
-			"conj":"Conjunction",
-			"part":"Particle",
-			"intj":"Interjection",
-			"indc":"Indeclinable Number",
-			"prep":"Preposition",
-			"adv":"Adverb"
-		},
-		"tense": {
-			"pres": "Present",
-			"impf": "Imperfect",
-			"fut": "Future",
-			"aor": "Aorist",
-			"perf": "Perfect",
-			"plupf": "Pluperfect"
 		},
 		"voice": {
 			"act": "Active",
@@ -197,11 +151,6 @@
 			"1": "First",
 			"2": "Second",
 			"3": "Third"
-		},
-		"number": {
-			"sg": "Singular",
-			"dl": "Dual",
-			"pl": "Plural"
 		},
 		"case": {
 			"nom": "Nominative",
